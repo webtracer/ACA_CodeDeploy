@@ -1,0 +1,6 @@
+{
+  "mongoURI":
+          "mongodb+srv://test:test@cluster0.fqddjac.mongodb.net/Code_Deployment?retryWrites=true&w=majority"
+}
+
+
