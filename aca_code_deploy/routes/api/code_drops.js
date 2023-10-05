@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
-const QAT_Deployment = require('../../models/CodeDrops');
+const query = require('../../config/db');
+const Code_Deployment = require('../../models/code_drop_model');
+// const Code_Deployment = require('../../models/code_drop_model');
 
 // @route GET api/QAT_Deployment
 // @description GET all QAT_Deployment
@@ -26,7 +27,7 @@ router.get('/:id', (req, res) => {
 // @description add/save QAT_Deployment
 // @access Public
 router.post('/', (req, res) => {
-    QAT_Deployment.create(req.body)
+    Code_Deployment.create(req.body)
         .then( QAT_Deployment => res.json({ msg: "Code drop added successfully" }))
         .catch(err => res.status(400).json({ error: err }));
 });

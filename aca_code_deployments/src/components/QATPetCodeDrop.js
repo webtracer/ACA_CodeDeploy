@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import Navigation from './Navigation';
+import request from 'superagent';
 
-const CreateQATCodeDrop = (props) => {
-    console.log('CreateQATCodeDrop code was hit')
-    const [QAT_Deployment, setCodeDrop] = useState({
+const CreateCodeDrop = (props) => {
+    console.log('CreateCodeDrop code was hit')
+    const [Code_Deployment, setCodeDrop] = useState({
         implementor: '',
         date: '',
-        jira_ticket: '',
         cc_location: '',
         code_area: '',
         code_version: '',
@@ -16,43 +16,67 @@ const CreateQATCodeDrop = (props) => {
         wsn_address: '',
         ini_update: '',
         ini_location: '',
+        jira_ticket: '',
+        jira_ticket_link: '',
         log_location: '',
         attachment: ''
     });
 
+    console.log(`Code_Deployment = ${JSON.stringify(Code_Deployment)}`);
     const onChange = (e) => {
-        setCodeDrop({ ...QAT_Deployment, [e.target.name]: e.target.value });
+        setCodeDrop({ ...Code_Deployment, [e.target.name]: e.target.value });
     };
 
     const onSubmit = (e) => {
         e.preventDefault();
+        console.log(``)
+        console.log(`OnSubmit was hit`);
+        console.log(`And Code_Deployment looks like:\n${JSON.stringify(Code_Deployment)}`);
+        console.log(`And Code_Deployment looks like:\n${Code_Deployment}`);
 
-        axios
-            .post('http://localhost:3100/api/code_drops', QAT_Deployment)
-            .then((res) => {
-                setCodeDrop({
-                    implementor: '',
-                    date: '',
-                    jira_ticket: '',
-                    cc_location: '',
-                    code_area: '',
-                    code_version: '',
-                    environment: '',
-                    wsn_address: '',
-                    ini_update: '',
-                    ini_location: '',
-                    log_location: '',
-                    attachment: ''
-                });
-                Navigation('/');
-            })
-            .catch((err) => {
-                console.log('Error in CreateCodeDrop');
+        // let request = new XMLHttpRequest();
+        // request.open('POST', 'http://localhost:3101/create_drop', true);
+        // request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        // request.send(JSON.stringify(Code_Deployment));
+        request
+            .post('http://localhost:3101/create_drop')
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(Code_Deployment)
+            .end(function(err, res) {
+                console.log(err);
+                Navigation('/')
             });
+
+        // axios.post('http://localhost:3101/create_drop', JSON.stringify(Code_Deployment))
+        //     .then((res) => {
+        //         setCodeDrop({
+        //             implementor: '',
+        //             date: '',
+        //             cc_location: '',
+        //             code_area: '',
+        //             code_version: '',
+        //             environment: '',
+        //             wsn_address: '',
+        //             ini_update: '',
+        //             ini_location: '',
+        //             jira_ticket: '',
+        //             jira_ticket_link: '',
+        //             attachment: ''
+        //         });
+        //         Navigation('/');
+        //     })
+        //     // .then((result) => result.json())
+        //     .then((info) => {
+        //         console.log(info);
+        //         Navigation('/');
+        //     })
+        //     .catch((err) => {
+        //         console.log(`Axios post and then error ... ${Code_Deployment}`)
+        //         console.log('Error in CreateCodeDrop');
+        //     });
     };
     console.log('The QATPETCodeDrop js file was hit');
     return (
-
         <div className='CreateCodeDrop'>
             <div className='container'>
                 <div className='row'>
@@ -66,11 +90,10 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='UserID of person running the code deployment'
                                     name='implementor'
                                     className='form-control'
-                                    value={QAT_Deployment.implementor}
+                                    value={CreateCodeDrop.implementor}
                                     onChange={onChange}
                                 />
                             </div>
-
                             <div className='form-group'>
                                 <label>Date: </label>
                                 <input
@@ -78,23 +101,10 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Date'
                                     name='date'
                                     className='form-control'
-                                    value={QAT_Deployment.date}
+                                    value={CreateCodeDrop.date}
                                     onChange={onChange}
                                 />
                             </div>
-
-                            <div className='form-group'>
-                                <label>JIRA Ticket: </label>
-                                <input
-                                    type='text'
-                                    placeholder='JIRA Ticket Number'
-                                    name='jira_ticket'
-                                    className='form-control'
-                                    value={QAT_Deployment.jira_ticket}
-                                    onChange={onChange}
-                                />
-                            </div>
-
                             <div className='form-group'>
                                 <label>Code Base: </label>
                                 <input
@@ -102,11 +112,10 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Location of Code base'
                                     name='cc_location'
                                     className='form-control'
-                                    value={QAT_Deployment.cc_location}
+                                    value={CreateCodeDrop.cc_location}
                                     onChange={onChange}
                                 />
                             </div>
-
                             <div className='form-group'>
                                 <label>Code Area: </label>
                                 <input
@@ -114,7 +123,7 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='QAT - PET - STG - PROD'
                                     name='code_area'
                                     className='form-control'
-                                    value={QAT_Deployment.code_area}
+                                    value={CreateCodeDrop.code_area}
                                     onChange={onChange}
                                 />
                             </div>
@@ -125,7 +134,7 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Version'
                                     name='code_version'
                                     className='form-control'
-                                    value={QAT_Deployment.code_version}
+                                    value={CreateCodeDrop.code_version}
                                     onChange={onChange}
                                 />
                             </div>
@@ -136,7 +145,7 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Environment'
                                     name='environment'
                                     className='form-control'
-                                    value={QAT_Deployment.environment}
+                                    value={CreateCodeDrop.environment}
                                     onChange={onChange}
                                 />
                             </div>
@@ -147,7 +156,7 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='WSN Address'
                                     name='wsn_address'
                                     className='form-control'
-                                    value={QAT_Deployment.wsn_address}
+                                    value={CreateCodeDrop.wsn_address}
                                     onChange={onChange}
                                 />
                             </div>
@@ -158,7 +167,7 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Is there an INI update'
                                     name='ini_update'
                                     className='form-control'
-                                    value={QAT_Deployment.ini_update}
+                                    value={CreateCodeDrop.ini_update}
                                     onChange={onChange}
                                 />
                             </div>
@@ -169,18 +178,29 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Location of updated INI file'
                                     name='ini_location'
                                     className='form-control'
-                                    value={QAT_Deployment.ini_location}
+                                    value={CreateCodeDrop.ini_location}
                                     onChange={onChange}
                                 />
                             </div>
                             <div className='form-group'>
-                                <label>LogFile: </label>
+                                <label>JIRA Ticket: </label>
                                 <input
                                     type='text'
-                                    placeholder='Log File'
-                                    name='log_location'
+                                    placeholder='JIRA Ticket Number'
+                                    name='jira_ticket'
                                     className='form-control'
-                                    value={QAT_Deployment.log_location}
+                                    value={CreateCodeDrop.jira_ticket}
+                                    onChange={onChange}
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <label>JIRA Ticket Link: </label>
+                                <input
+                                    type='text'
+                                    placeholder='JIRA Ticket Link'
+                                    name='jira_ticket_link'
+                                    className='form-control'
+                                    value={CreateCodeDrop.jira_ticket_link}
                                     onChange={onChange}
                                 />
                             </div>
@@ -191,11 +211,10 @@ const CreateQATCodeDrop = (props) => {
                                     placeholder='Attach Email authorization'
                                     name='attachment'
                                     className='form-control'
-                                    value={QAT_Deployment.attachment}
+                                    value={CreateCodeDrop.attachment}
                                     onChange={onChange}
                                 />
                             </div>
-
                             <input
                                 type='submit'
                                 className='btn btn-outline-warning btn-block mt-4'
@@ -208,4 +227,4 @@ const CreateQATCodeDrop = (props) => {
     );
 };
 
-export default CreateQATCodeDrop;
+export default CreateCodeDrop;
